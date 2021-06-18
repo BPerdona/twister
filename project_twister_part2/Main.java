@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class Main {
 
-    static ArrayList<Account> userTwister = new ArrayList<Account>();
-    static ArrayList<Twist> globalTwists = new ArrayList<Twist>();
-    static ArrayList<Topic> globalTopic = new ArrayList<Topic>();
+    static ArrayList<Account> userTwister = new ArrayList<>();
+    static ArrayList<Twist> globalTwists = new ArrayList<>();
+    static ArrayList<Topic> globalTopic = new ArrayList<>();
 
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
@@ -164,18 +164,65 @@ public class Main {
                                         int profileOption = sc.nextInt();
 
                                         switch (profileOption) {
-                                            case 1:
-                                                break;
+                                            case 1 -> {
+                                                print("\n_____Your Profile_____\n");
+                                                print("Nome: " + user.getName());
+                                                print("At: @" + user.getAt());
+                                                print("Email: " + user.getEmail());
+                                                print("Password: " + user.getPassword());
+                                                print("Total of Twists: " + user.twisters().size());
+                                            }
+                                            case 2 -> {
+                                                boolean editProfileLogin = true;
+                                                while (editProfileLogin) {
+                                                    print("\nWhat information do you want to change: ");
+                                                    print("(1) Name");
+                                                    print("(2) At(@)");
+                                                    print("(3) Email");
+                                                    print("(4) Password");
+                                                    print("(9) Return\n");
+                                                    int editProfileOption = sc.nextInt();
 
-                                            case 2:
-                                                break;
-
-                                            case 9:
-                                                loginProfile = false;
-                                                break;
-                                            default:
-                                                print("\n>>>Invalid option<<<\n");
-                                                break;
+                                                    switch (editProfileOption) {
+                                                        case 1 -> {
+                                                            print("\nChange the name '" + user.getName() + "' to: ");
+                                                            String newName = sc.next();
+                                                            user.setName(newName);
+                                                        }
+                                                        case 2 -> {
+                                                            print("\nChange the at '@" + user.getAt() + "' to: ");
+                                                            String newAt = sc.next();
+                                                            for (Account account : userTwister) {
+                                                                if (account.getAt().equals(newAt)) {
+                                                                    print("\n>>>This At already exists<<<\n");
+                                                                    break;
+                                                                }
+                                                            }
+                                                            user.setAt(newAt);
+                                                        }
+                                                        case 3 -> {
+                                                            print("\nChange the email '" + user.getEmail() + "' to: ");
+                                                            String newEmail = sc.next();
+                                                            for (Account account : userTwister) {
+                                                                if (account.getEmail().equals(newEmail)) {
+                                                                    print("\n>>>This Email already exists<<<\n");
+                                                                    break;
+                                                                }
+                                                            }
+                                                            user.setEmail(newEmail);
+                                                        }
+                                                        case 4 -> {
+                                                            print("\nChange the Password '" + user.getName() + "' to: ");
+                                                            String newPassword = sc.next();
+                                                            user.setPassword(newPassword);
+                                                        }
+                                                        case 9 -> editProfileLogin = false;
+                                                        default -> print("\n>>>Invalid Option<<<\n");
+                                                    }
+                                                }
+                                            }
+                                            case 9 -> loginProfile = false;
+                                            default -> print("\n>>>Invalid option<<<\n");
                                         }
 
                                     }
@@ -267,19 +314,47 @@ public class Main {
                                         int optionSettings = sc.nextInt();
 
                                         switch (optionSettings) {
-                                            case 1:
-                                                break;
-
-                                            case 2:
-                                                break;
-
-                                            case 9:
-                                                loginSetting = false;
-                                                break;
-
-                                            default:
-                                                print("\n>>>Invalid Option<<<\n");
-                                                break;
+                                            case 1 -> {
+                                                print("\n_____Yours Settings_____\n");
+                                                if (user.getSettings().isDarkTheme()) {
+                                                    print("Dark Theme: On");
+                                                } else {
+                                                    print("Dark Theme: Off");
+                                                }
+                                                if (user.getSettings().isNotification()) {
+                                                    print("Notifications: On");
+                                                } else {
+                                                    print("Notifications: off");
+                                                }
+                                            }
+                                            case 2 -> {
+                                                print("Change Dark Theme to (1=on/2=off):");
+                                                int changeDarkTheme = sc.nextInt();
+                                                if (changeDarkTheme != 1 && changeDarkTheme != 2) {
+                                                    print("\n>>>Invalid Value!<<<\n");
+                                                    break;
+                                                }
+                                                if (changeDarkTheme == 1) {
+                                                    user.getSettings().setDarkTheme(true);
+                                                }
+                                                if (changeDarkTheme == 2) {
+                                                    user.getSettings().setDarkTheme(false);
+                                                }
+                                                print("Change Notifications to (1=on/2=off):");
+                                                int changeNotifications = sc.nextInt();
+                                                if (changeNotifications != 1 && changeNotifications != 2) {
+                                                    print("\n>>>Invalid Value!<<<\n");
+                                                    break;
+                                                }
+                                                if (changeNotifications == 1) {
+                                                    user.getSettings().setNotification(true);
+                                                }
+                                                if (changeNotifications == 2) {
+                                                    user.getSettings().setNotification(false);
+                                                }
+                                            }
+                                            case 9 -> loginSetting = false;
+                                            default -> print("\n>>>Invalid Option<<<\n");
                                         }
                                     }
                                 }
@@ -326,14 +401,13 @@ public class Main {
                     if (!atVerif) {
                         print("\n\n>>>Failed to create account<<<");
                         print(">>>This at (@) already exists<<<\n\n");
+                        break;
                     }
-                    if (atVerif && emailVerif) {
-                        Settings auxSettings = new Settings(false, true);
+                    Settings auxSettings = new Settings(false, true);
 
-                        Account auxAccount = new Account(name, password, email, at, auxSettings);
-                        userTwister.add(auxAccount);
-                        print("\n\n >>>Account created<<< \n\n");
-                    }
+                    Account auxAccount = new Account(name, password, email, at, auxSettings);
+                    userTwister.add(auxAccount);
+                    print("\n\n >>>Account created<<< \n\n");
                 }
                 case 9 -> runningCode = false;
                 default -> print("\n\n>>>Opção invalida!<<<\n\n");
@@ -347,11 +421,11 @@ public class Main {
 
     private static void generateTimeLine(Account user) {
 
-        for(int i=0; i < globalTwists.size(); i++){
-            for(Account friend : user.getFriend()){
-                if(globalTwists.get(i).getTwistOwner().equals(friend.getAt())){
-                    print("\n@"+globalTwists.get(i).getTwistOwner());
-                    System.out.println(globalTwists.get(i).getContent());
+        for (Twist globalTwist : globalTwists) {
+            for (Account friend : user.getFriend()) {
+                if (globalTwist.getTwistOwner().equals(friend.getAt())) {
+                    print("\n@" + globalTwist.getTwistOwner());
+                    System.out.println(globalTwist.getContent());
                 }
             }
         }
