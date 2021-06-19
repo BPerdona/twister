@@ -68,14 +68,17 @@ public class Account {
         return twisters;
     }
 
+    //Está função não foi usada
     public void setAccountTwister(ArrayList<Twist> accountTwister) {
         this.twisters = twisters;
     }
 
+    //Está função não foi usada
     public ArrayList<List> getLists() {
         return lists;
     }
 
+    //Está função não foi usada
     public void setLists(ArrayList<List> lists) {
         this.lists = lists;
     }
@@ -84,6 +87,7 @@ public class Account {
         return settings;
     }
 
+    //Está função não foi usada
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
@@ -92,12 +96,9 @@ public class Account {
         return friend;
     }
 
+    //Está função não foi usada
     public void setFriend(ArrayList<Account> friend) {
         this.friend = friend;
-    }
-
-    public void addTwist(Twist twist){
-        this.twisters.add(twist);
     }
 
     public void deleteTwist(int index){
@@ -108,10 +109,6 @@ public class Account {
             return;
         }
         this.twisters.remove(index);
-    }
-
-    public void addFriend(Account friend){
-        this.friend.add(friend);
     }
 
     public void deleteFriend(int index){
