@@ -14,11 +14,9 @@ public class Main {
         //Inserir função para dicionar alguns dados no sistema
         addData();
 
-
         boolean runningCode = true;
         while(runningCode){
 
-            cleanConsole();
             printLogo();
             print("\n\n_____Welcome_to_Twister_Login!_____");
             print("\nSelect an option bellow");
@@ -26,7 +24,6 @@ public class Main {
             print("(2) Register");
             print("(9) Exit");
             int optionLogin = sc.nextInt();
-            cleanConsole();
 
             switch (optionLogin) {
                 case 1 -> {
@@ -60,7 +57,6 @@ public class Main {
                         boolean login = true;
                         while (login) {
 
-                            cleanConsole();
                             print("\n_____Welcome_to_Twister " + user.getName() + "!______\n");
                             print("Select an option below:");
                             print("(1) Posts");
@@ -70,24 +66,22 @@ public class Main {
                             print("(5) Settings");
                             print("(9) Logout");
                             int optionMain = sc.nextInt();
-                            cleanConsole();
 
                             switch (optionMain) {
                                 case 1 -> {
                                     boolean loginPost = true;
                                     while (loginPost) {
 
-                                        print("\n_____Post_____\n"); //todo
+                                        print("\n_____Post_____\n");
                                         print("(1) New Post");
                                         print("(2) List your posts");
                                         print("(3) Delete Post");
                                         print("(4) Time Line");
-                                        print("(5) Follow Account"); //não deixar adicionar 2 vezes o mesmo usuario, e nao mostrar no print
+                                        print("(5) Follow Account");
                                         print("(6) List Follows");
                                         print("(7) Unfollow Account");
                                         print("(9) Back to Main menu");
                                         int postOption = sc.nextInt();
-                                        cleanConsole();
 
                                         switch (postOption) {
                                             case 1 -> {
@@ -114,8 +108,15 @@ public class Main {
                                                 System.out.print("Twist Index: ");
                                                 int deleteIndex = sc.nextInt();
 
-                                                //Deixei com a função por conta das restrições no metodo deleteTwist
-                                                user.deleteTwist(deleteIndex);
+                                                int countIndexGlobal = 0;
+                                                for(Twist twist : globalTwists){
+                                                    if(twist.getContent().equals(user.twisters().get(deleteIndex).getContent()) && twist.getTwistOwner().equals(user.getAt())){
+                                                        globalTwists.remove(countIndexGlobal);
+                                                        break;
+                                                    }
+                                                    countIndexGlobal++;
+                                                }
+                                                user.twisters().remove(deleteIndex);
                                                 print("\n>>>Twist Deleted<<<\n");
                                             }
                                             case 4 ->{
@@ -127,25 +128,34 @@ public class Main {
                                                 print("\n_____Users_List_____\n");
                                                 int countAccount = 0;
 
-                                                for (Account account : userTwister) {
-                                                    if (account == user) {
-                                                        print("\nUser: [" + countAccount + "]");
-                                                        print("You are here!!!");
-                                                        countAccount++;
-                                                    } else {
-                                                        print("\nIndex [" + countAccount + "]");
-                                                        print("Name: " + userTwister.get(countAccount).getName());
-                                                        print("At: @" + userTwister.get(countAccount).getAt());
+                                                for (Account account : userTwister){
+                                                    if(!verifyFriend(user, account.getAt())) {
+                                                        if (account == user) {
+                                                            print("\nUser: [" + countAccount + "]");
+                                                            print("You are here!!!");
+                                                            countAccount++;
+                                                        } else {
+                                                            print("\nIndex [" + countAccount + "]");
+                                                            print("Name: " + userTwister.get(countAccount).getName());
+                                                            print("At: @" + userTwister.get(countAccount).getAt());
+                                                            countAccount++;
+                                                        }
+                                                    }else{
                                                         countAccount++;
                                                     }
                                                 }
+
                                                 print("\nSelect profile to follow: ");
                                                 int followIndex = sc.nextInt();
 
                                                 if (followIndex < userTwister.size() && followIndex > -1) {
-                                                    user.getFriend().add(userTwister.get(followIndex));
+                                                    if(verifyFriend(user, userTwister.get(followIndex).getAt())){
+                                                        print("\n>>>You are already friends!<<<\n");
+                                                    }else{
+                                                        user.getFriend().add(userTwister.get(followIndex));
+                                                        print("\n>>>You Followed " + userTwister.get(followIndex).getName() + "!<<<\n");
+                                                    }
                                                 }
-                                                print("\n>>>You Followed " + userTwister.get(followIndex).getName() + "!<<<\n");
                                             }
                                             case 6 -> listFollows(user);
 
@@ -173,7 +183,6 @@ public class Main {
                                         print("(2) Edit Profile");
                                         print("(9) Back to Main menu");
                                         int profileOption = sc.nextInt();
-                                        cleanConsole();
 
                                         switch (profileOption) {
                                             case 1 -> {
@@ -195,13 +204,13 @@ public class Main {
                                                     print("(4) Password");
                                                     print("(9) Return\n");
                                                     int editProfileOption = sc.nextInt();
-                                                    cleanConsole();
 
                                                     switch (editProfileOption) {
                                                         case 1 -> {
                                                             print("\nChange the name '" + user.getName() + "' to: ");
                                                             String newName = sc.next();
                                                             user.setName(newName);
+                                                            print("\n>>>Name changed!<<<\n");
                                                         }
                                                         case 2 -> {
                                                             print("\nChange the at '@" + user.getAt() + "' to: ");
@@ -212,7 +221,26 @@ public class Main {
                                                                     break;
                                                                 }
                                                             }
+                                                            print("\n>>>At changed!<<<\n");
+
+                                                            //For alterando todos twist com @ do usuario nos topicos
+                                                            for(Topic topic : globalTopic){
+                                                                for(Twist twist : topic.getTwists()){
+                                                                    if(twist.getTwistOwner().equals(user.getAt())){
+                                                                        twist.setTwistOwner(newAt);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            //Mudei o at do usuario depois pq precisava achar ele nso 2 for anteriores
                                                             user.setAt(newAt);
+
+                                                            //For alterando todos twist com @ do usuario
+                                                            for (Twist twist : user.twisters()){
+                                                                twist.setTwistOwner(user.getAt());
+                                                            }
+
+
                                                         }
                                                         case 3 -> {
                                                             print("\nChange the email '" + user.getEmail() + "' to: ");
@@ -223,12 +251,14 @@ public class Main {
                                                                     break;
                                                                 }
                                                             }
+                                                            print("\n>>>Email changed!<<<\n");
                                                             user.setEmail(newEmail);
                                                         }
                                                         case 4 -> {
                                                             print("\nChange the Password '" + user.getName() + "' to: ");
                                                             String newPassword = sc.next();
                                                             user.setPassword(newPassword);
+                                                            print("\n>>>Password changed!<<<\n");
                                                         }
                                                         case 9 -> editProfileLogin = false;
                                                         default -> print("\n>>>Invalid Option<<<\n");
@@ -254,7 +284,6 @@ public class Main {
                                         print("(5) Delete Twist of Topic");
                                         print("(9) Back to Main menu");
                                         int optionTopic = sc.nextInt();
-                                        cleanConsole();
 
                                         switch (optionTopic) {
                                             case 1 -> listTopics();
@@ -352,7 +381,7 @@ public class Main {
 
                                                 }else {
                                                     //If verificando se o usuario é o autor do twist
-                                                    if (globalTopic.get(selectTopic).getTwists().get(selectTopic).getTwistOwner().equals(user.getAt())) {
+                                                    if (globalTopic.get(selectTopic).getTwists().get(selectTwist).getTwistOwner().equals(user.getAt())) {
                                                         globalTopic.get(selectTopic).getTwists().remove(selectTwist);
                                                         print("\n>>>Your Twist has been deleted<<<\n");
 
@@ -372,16 +401,15 @@ public class Main {
                                     boolean loginLists = true;
                                     while (loginLists) {
 
-                                        print("\n_____Lists_____"); //todo
-                                        print("(1) Create List"); //não pode criar duas listas com mesmo nome
-                                        print("(2) Show Lists"); //mostrar apenas se existir listas
-                                        print("(3) Add a member to a List"); //nao deixar adicionar 2x o mesmo usuario e nao mostrar um usuario ja adicionado
+                                        print("\n_____Lists_____");
+                                        print("(1) Create List");
+                                        print("(2) Show Lists");
+                                        print("(3) Add a member to a List");
                                         print("(4) See List Timeline");
                                         print("(5) Edit a List");
                                         print("(6) Delete a List");
                                         print("(9) Back to Main menu");
                                         int optionLists = sc.nextInt();
-                                        cleanConsole();
 
                                         switch (optionLists) {
                                             case 1 -> {
@@ -389,14 +417,32 @@ public class Main {
                                                 print("New List Name: ");
                                                 String newList = sc.next();
 
-                                                print("Insert a Description about "+newList+":");
-                                                String newDescription = sc.next();
+                                                boolean listExists = false;
+                                                for (List list : user.getLists()){
+                                                    if(list.getName().equals(newList)){
+                                                        print("\n>>>There is already a list with that name!<<<\n");
+                                                        listExists = true;
+                                                    }
+                                                }
+                                                if (!listExists) {
+                                                    print("\nInsert a Description about " + newList + ":");
+                                                    String newDescription = sc.next();
 
-                                                List tempList = new List(newList, newDescription);
-                                                user.getLists().add(tempList);
+                                                    List tempList = new List(newList, newDescription);
+                                                    user.getLists().add(tempList);
+
+                                                    print("\n>>>Created List<<<\n");
+                                                }
                                             }
 
-                                            case 2 -> showLists(user);
+                                            case 2 -> {
+                                                if(user.getLists().size()!=0){
+                                                    showLists(user);
+                                                }else{
+                                                    print("\n>>>You don't have lists <<<\n");
+                                                }
+
+                                            }
 
                                             case 3 -> {
                                                 if(user.getFriend().size()==0){
@@ -420,7 +466,7 @@ public class Main {
 
                                                             } else {
                                                                 listFollows(user);
-                                                                print("Select a friend to add or type '-1' to quit:");
+                                                                print("\nSelect a friend to add or type '-1' to quit:");
                                                                 int memberOption = sc.nextInt();
 
                                                                 if (memberOption == -1) {
@@ -430,8 +476,18 @@ public class Main {
                                                                     print("\n>>>This friend doesn't exists<<<\n");
 
                                                                 } else {
-                                                                    user.getLists().get(selectList).getMembers().add(user.getFriend().get(memberOption));
-                                                                    print("\n>>>You added " + user.getFriend().get(memberOption).getName() + " to this list!<<<\n");
+                                                                    boolean alreadyInList = false;
+                                                                    for (Account account : user.getLists().get(selectList).getMembers()){
+                                                                        if(account.getAt().equals(user.getFriend().get(memberOption).getAt())){
+                                                                            alreadyInList = true;
+                                                                        }
+                                                                    }
+                                                                    if(alreadyInList){
+                                                                        print("\n>>>This account is already on the list<<<\n");
+                                                                    }else {
+                                                                        user.getLists().get(selectList).getMembers().add(user.getFriend().get(memberOption));
+                                                                        print("\n>>>You added " + user.getFriend().get(memberOption).getName() + " to this list!<<<\n");
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -475,31 +531,42 @@ public class Main {
                                                         print("\n_____Editing_List_____\n");
                                                         print("(1) Edit name");
                                                         print("(2) Edit description");
-                                                        print("(3) Add a member");
-                                                        print("(4) Remove a member");
-                                                        print("(5) Exit");
-                                                        int selectEditList = sc.nextInt();
+                                                        print("(3) Remove a member");
+                                                        print("(9) Exit");
+                                                        int selectEditOption = sc.nextInt();
 
-                                                        switch (selectEditList){
+                                                        switch (selectEditOption){
                                                             case 1 -> {
-                                                                print("\nChange the list name '"+user.getLists().get(selectEditList).getName()+"' to:");
+                                                                print("\nChange the list name '"+user.getLists().get(selectList).getName()+"' to:");
                                                                 String newNameList = sc.next();
-                                                                user.getLists().get(selectEditList).setName(newNameList);
+                                                                user.getLists().get(selectList).setName(newNameList);
                                                                 print("\n>>>Name changed!<<<\n");
                                                             }
                                                             case 2 -> {
-                                                                print("\nChange the list description '"+user.getLists().get(selectEditList).getDescription()+"' to:");
+                                                                print("\nChange the list description '"+user.getLists().get(selectList).getDescription()+"' to:");
                                                                 String newDescriptionList = sc.next();
-                                                                user.getLists().get(selectEditList).setDescription(newDescriptionList);
+                                                                user.getLists().get(selectList).setDescription(newDescriptionList);
                                                                 print("\n>>>Description changed!<<<\n");
                                                             }
                                                             case 3 -> {
-                                                                //todo
+                                                                if (user.getLists().get(selectList).getMembers().size() == 0) {
+                                                                    print("\n>>>This list has no members<<<\n");
+                                                                }else {
+                                                                    print("\n_____List's Members_____\n");
+                                                                    int countMembers = 0;
+                                                                    for (Account account : user.getLists().get(selectList).getMembers()) {
+                                                                        print("\n[" + countMembers + "] @" + account.getAt());
+                                                                        countMembers++;
+                                                                    }
+                                                                    print("\nSelect a member to remove: ");
+                                                                    int selectRemoveMember = sc.nextInt();
+
+                                                                    print("\n>>>User " + user.getLists().get(selectList).getMembers().get(selectRemoveMember).getAt() + " has been removed from your list");
+                                                                    user.getLists().get(selectList).getMembers().remove(selectRemoveMember);
+                                                                }
                                                             }
-                                                            case 4 -> {
-                                                                //todo
-                                                            }
-                                                            case 5 -> loginEditList = false;
+
+                                                            case 9 -> loginEditList = false;
 
                                                             default -> print("\n>>>Invalid Option<<<\n");
                                                         }
@@ -541,7 +608,6 @@ public class Main {
                                         print("(2) Change Setting");
                                         print("(9) Back to Main menu");
                                         int optionSettings = sc.nextInt();
-                                        cleanConsole();
 
                                         switch (optionSettings) {
                                             case 1 -> {
@@ -661,12 +727,6 @@ public class Main {
 
     }
 
-    public static void cleanConsole(){
-        for(int i=0; i<50; i++){
-            System.out.println();
-        }
-    }
-
     private static void generateTimeLine(Account user) {
 
         for (Twist globalTwist : globalTwists) {
@@ -679,7 +739,16 @@ public class Main {
         }
     }
 
-    public static void listFollows(Account user){
+    private static boolean verifyFriend(Account user, String at){
+        for(Account friend : user.getFriend()){
+            if(friend.getAt().equals(at)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void listFollows(Account user){
         print("\n_____You_are_Following_____\n");
         int countFollowers=0;
         for (Account account : user.getFriend()){
@@ -691,7 +760,7 @@ public class Main {
     }
 
 
-    public static void listUserTwists(Account user){
+    private static void listUserTwists(Account user){
         print("\n_____Your_Twists_____\n");
         int countTwists=0;
         for(Twist twist : user.twisters()){
@@ -703,7 +772,7 @@ public class Main {
         }
     }
 
-    public static void listTopics(){
+    private static void listTopics(){
         int indexCount = 0;
         for(Topic topics : globalTopic){
             print("\n["+indexCount+"] Topic: " + topics.getName());
@@ -713,7 +782,7 @@ public class Main {
         }
     }
 
-    public static void showLists(Account user){
+    private static void showLists(Account user){
         print("\n_____Your_Lists_____\n");
         int indexCount = 0;
         for (List list : user.getLists()){
@@ -723,7 +792,7 @@ public class Main {
         }
     }
 
-    public static void addData(){
+    private static void addData(){
         Settings defaultSettings = new Settings(false,true);
 
         Account accountBruno = new Account("Bruno","senha","bruno", "BPerdona", defaultSettings);
@@ -732,10 +801,10 @@ public class Main {
         Account accountEminem = new Account("Marshall","123","marshal.com","Eminem", defaultSettings);
         userTwister.add(accountEminem);
 
-        Account accountRock = new Account("TheRock","4444","rockMovie","TheRock", defaultSettings);
+        Account accountRock = new Account("The Rock","4444","Dwayne Johnson","TheRock", defaultSettings);
         userTwister.add(accountRock);
 
-        Account accountLucca = new Account("LuccaF","6969","luccabikes","BikeLucca", defaultSettings);
+        Account accountLucca = new Account("Adam Sandler","6969","adam@sandler.com","ASandler", defaultSettings);
         userTwister.add(accountLucca);
         Twist twistLucca = new Twist("BikeLucca","RHCP Melhor banda!");
         userTwister.get(3).twisters().add(twistLucca);

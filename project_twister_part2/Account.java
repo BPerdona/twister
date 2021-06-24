@@ -68,17 +68,16 @@ public class Account {
         return twisters;
     }
 
-    //Está função não foi usada
+    //Esse metodo não é utilizado por que um usuario não pode pegar uma lista de twists de alguem e colocar na sua
     public void setAccountTwister(ArrayList<Twist> accountTwister) {
         this.twisters = twisters;
     }
 
-    //Está função não foi usada
     public ArrayList<List> getLists() {
         return lists;
     }
 
-    //Está função não foi usada
+    //Não se pode adicionar uma lista de listas a um usuario
     public void setLists(ArrayList<List> lists) {
         this.lists = lists;
     }
@@ -87,7 +86,7 @@ public class Account {
         return settings;
     }
 
-    //Está função não foi usada
+    //As opções podem ser alteradas e não podem receber um objeto settings de outro lugar
     public void setSettings(Settings settings) {
         this.settings = settings;
     }
@@ -96,19 +95,9 @@ public class Account {
         return friend;
     }
 
-    //Está função não foi usada
+    //Eu apenas adiciono e removo a lista de amigos, ou seja, nao pego uma lista de amigos e adicione a alguem
     public void setFriend(ArrayList<Account> friend) {
         this.friend = friend;
-    }
-
-    public void deleteTwist(int index){
-        if(index<twisters.size()){
-            return;
-        }
-        if(index<0){
-            return;
-        }
-        this.twisters.remove(index);
     }
 
     public void deleteFriend(int index){

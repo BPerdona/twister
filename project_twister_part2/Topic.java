@@ -10,32 +10,30 @@ public class Topic {
         this.category = category;
     }
 
-    //Está função não foi usada
     public String getName() {
         return name;
     }
 
-    //Está função não foi usada
+    /*Após criar um topico nao se pode muda-lo, não faz sentido mudar um topico de filme para esportes e continuar os
+    twists que estavam comentando sobre o assunto antigo*/
     public void setName(String name) {
         this.name = name;
     }
 
-    //Está função não foi usada
     public String getCategory() {
         return category;
     }
 
-    //Está função não foi usada
+    //Como comentado acima, não faz sentido mudar esse atributo
     public void setCategory(String category) {
         this.category = category;
     }
 
-    //Está função não foi usada
     public ArrayList<Twist> getTwists() {
         return twists;
     }
 
-    //Está função não foi usada
+    //Não pode adicionar uma lista direta a um topic por conta da regra de negocio
     public void setTwists(ArrayList<Twist> twists) {
         this.twists = twists;
     }

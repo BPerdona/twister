@@ -11,7 +11,6 @@ public class Twist {
         return twistOwner;
     }
 
-    //Está função não foi usada
     public void setTwistOwner(String twistOwner) {
         this.twistOwner = twistOwner;
     }
@@ -20,7 +19,7 @@ public class Twist {
         return content;
     }
 
-    //Está função não foi usada
+    //A regra de negocio não permite que se mude o conteudo de um twist
     public void setContent(String content) {
         this.content = content;
     }
