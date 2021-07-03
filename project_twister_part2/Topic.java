@@ -3,11 +3,12 @@ import java.util.ArrayList;
 public class Topic {
     private String name;
     private String category;
-    private ArrayList<Twist> twists = new ArrayList<Twist>();
+    private ArrayList<Twist> twists;
 
     public Topic(String name, String category) {
         this.name = name;
         this.category = category;
+        this.twists = new ArrayList<Twist>();
     }
 
     public String getName() {

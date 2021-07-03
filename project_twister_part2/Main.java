@@ -806,14 +806,14 @@ public class Main {
 
         Account accountLucca = new Account("Adam Sandler","6969","adam@sandler.com","ASandler", defaultSettings);
         userTwister.add(accountLucca);
-        Twist twistLucca = new Twist("BikeLucca","RHCP Melhor banda!");
+        Twist twistLucca = new Twist("Lucca","RHCP Melhor banda!");
         userTwister.get(3).twisters().add(twistLucca);
         globalTwists.add(twistLucca);
 
         Topic topicFilme = new Topic("Celebrities", "Films");
 
-        Twist twistFilme1 = new Twist("ProfessorAlbert","Otimo filme");
-        Twist twistFilme2 = new Twist("Maria","Não gostei");
+        Twist twistFilme1 = new Twist("Flea","Otimo filme");
+        Twist twistFilme2 = new Twist("Pedro123","Não gostei");
         topicFilme.addTwist(twistFilme1);
         topicFilme.addTwist(twistFilme2);
 

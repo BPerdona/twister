@@ -3,11 +3,12 @@ import java.util.ArrayList;
 public class List {
     private String name;
     private String description;
-    private ArrayList<Account> members = new ArrayList<Account>();
+    private ArrayList<Account> members;
 
     public List(String name, String description) {
         this.name = name;
         this.description = description;
+        this.members = new ArrayList<Account>();
     }
 
     public String getName() {

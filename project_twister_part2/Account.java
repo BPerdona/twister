@@ -6,10 +6,10 @@ public class Account {
     private String password;
     private String email;
     private String at;
-    private ArrayList<Twist> twisters = new ArrayList<Twist>();
-    private ArrayList<List> lists = new ArrayList<List>();
-    private Settings settings = new Settings(false, true);
-    private ArrayList<Account> friend = new ArrayList<Account>();
+    private ArrayList<Twist> twisters;
+    private ArrayList<List> lists;
+    private Settings settings;
+    private ArrayList<Account> friend;
 
     /*
     Foram retirados do classe contrutor os seguintes atributos: timeLine, twisters, lists, friend.
@@ -22,6 +22,10 @@ public class Account {
         this.email = email;
         this.at = at;
         this.settings = settings;
+        this.settings = new Settings(false, true);
+        this.twisters = new ArrayList<Twist>();
+        this.lists = new ArrayList<List>();
+        this.friend = new ArrayList<Account>();
     }
 
     public String getName() {
