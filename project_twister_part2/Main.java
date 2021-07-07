@@ -160,13 +160,18 @@ public class Main {
                                             case 6 -> listFollows(user);
 
                                             case 7 -> {
-                                                listFollows(user);
+                                                if(user.getFriend().size()!=0){
+                                                    listFollows(user);
 
                                                 print("Select a index to Unfollow: ");
                                                 int indexDelete = sc.nextInt();
 
-                                                print("\n>>>You stopped following the " + userTwister.get(indexDelete).getName() + "!<<<\n");
+                                                print("\n>>>You stopped following the " + user.getFriend().get(indexDelete).getName() + "!<<<\n");
                                                 user.deleteFriend(indexDelete);
+                                                }else{
+                                                    print("\n>>>Friend List Empty<<<\n");
+                                                }
+                                    
                                             }
                                             case 9 -> loginPost = false;
 
