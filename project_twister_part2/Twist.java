@@ -18,9 +18,4 @@ public class Twist {
     public String getContent() {
         return content;
     }
-
-    //A regra de negocio não permite que se mude o conteudo de um twist
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

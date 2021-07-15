@@ -31,9 +31,4 @@ public class List {
         return members;
     }
 
-    //O sistema nao permite adicionar uma lista de contas para adicionar uma lista
-    public void setMembers(ArrayList<Account> members) {
-        this.members = members;
-    }
-
 }

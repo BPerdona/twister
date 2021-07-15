@@ -15,28 +15,12 @@ public class Topic {
         return name;
     }
 
-    /*Após criar um topico nao se pode muda-lo, não faz sentido mudar um topico de filme para esportes e continuar os
-    twists que estavam comentando sobre o assunto antigo*/
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCategory() {
         return category;
     }
 
-    //Como comentado acima, não faz sentido mudar esse atributo
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public ArrayList<Twist> getTwists() {
         return twists;
-    }
-
-    //Não pode adicionar uma lista direta a um topic por conta da regra de negocio
-    public void setTwists(ArrayList<Twist> twists) {
-        this.twists = twists;
     }
 
     public void addTwist(Twist twist){

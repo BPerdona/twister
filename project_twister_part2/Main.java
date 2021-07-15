@@ -93,7 +93,6 @@ public class Main {
                                                     Twist tempTwist = new Twist(user.getAt(), tempTwistContent);
                                                     user.twisters().add(tempTwist);
                                                     globalTwists.add(tempTwist);
-
                                                     print("\n>>> Twist Done! <<<\n");
                                                 } else {
                                                     print("\n>>>> You couldn't do this Twist <<<<");
@@ -160,18 +159,13 @@ public class Main {
                                             case 6 -> listFollows(user);
 
                                             case 7 -> {
-                                                if(user.getFriend().size()!=0){
-                                                    listFollows(user);
+                                                listFollows(user);
 
                                                 print("Select a index to Unfollow: ");
                                                 int indexDelete = sc.nextInt();
 
-                                                print("\n>>>You stopped following the " + user.getFriend().get(indexDelete).getName() + "!<<<\n");
+                                                print("\n>>>You stopped following the " + userTwister.get(indexDelete).getName() + "!<<<\n");
                                                 user.deleteFriend(indexDelete);
-                                                }else{
-                                                    print("\n>>>Friend List Empty<<<\n");
-                                                }
-                                    
                                             }
                                             case 9 -> loginPost = false;
 
