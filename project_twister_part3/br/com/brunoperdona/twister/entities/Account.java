@@ -9,13 +9,14 @@ public class Account extends User{
     private ArrayList<List> lists;
     private ArrayList<Account> friend;
 
+    //Utilizado para ciar uma conta configurações padrao
     public Account(String name, String password, String email, String at) {
         super(name, password, email, at);
         this.lists = new ArrayList<List>();
         this.friend = new ArrayList<Account>();
     }
 
-    //TODO Arruma isso
+    //Utilizado para criar a conta com opções ja definidas
     public Account(String name, String password, String email, String at, Settings settings) {
         super(name, password, email, at, settings);
         this.lists = new ArrayList<List>();
@@ -38,5 +39,15 @@ public class Account extends User{
             return;
         }
         this.friend.remove(index);
+    }
+
+    //pegando um arraylist da classe abstrata
+    public ArrayList<Twist> twisters(){
+        return super.getTwisters();
+    }
+
+    //Implementado de User
+    public String typeOf(){
+        return "-ACCOUNT";
     }
 }

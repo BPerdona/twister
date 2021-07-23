@@ -3,11 +3,14 @@ package br.com.brunoperdona.twister;
 import br.com.brunoperdona.twister.entities.*;
 import br.com.brunoperdona.twister.settings.Settings;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 
+    static ArrayList<Admin> admins = new ArrayList<>();
     static ArrayList<Account> userTwister = new ArrayList<>();
+    static ArrayList<User> allUsers = new ArrayList<>();
     static ArrayList<Twist> globalTwists = new ArrayList<>();
     static ArrayList<Topic> globalTopic = new ArrayList<>();
 
@@ -26,6 +29,8 @@ public class Main {
             print("\nSelect an option bellow");
             print("(1) Login");
             print("(2) Register");
+            print("(3) Login como Admin");
+            print("(4) Registrar novo Admin");
             print("(9) Exit");
             int optionLogin = sc.nextInt();
 
@@ -303,13 +308,22 @@ public class Main {
                                                         topicExists = true;
                                                     }
                                                 }
-                                                if (!topicExists) {
-                                                    print("Topic category: ");
-                                                    String newCategory = sc.next();
 
-                                                    Topic tempTopic = new Topic(newTopic, newCategory);
-                                                    globalTopic.add(tempTopic);
-                                                    print("\n>>>You create the Topic " + newTopic + "!<<<\n");
+                                                //Adicionando topico sem Categoria
+                                                if (!topicExists) {
+                                                    print("\nThis topic need category?(1=Yes/0=No)");
+                                                    int selectCategory = sc.nextInt();
+                                                    if(selectCategory==1){
+                                                        print("Topic category: ");
+                                                        String newCategory = sc.next();
+
+                                                        Topic tempTopic = new Topic(newTopic, newCategory);
+                                                        globalTopic.add(tempTopic);
+                                                        print("\n>>>You create the Topic " + newTopic + "!<<<\n");
+                                                    }else{
+                                                        Topic tempTopic = new Topic(newTopic);
+                                                        globalTopic.add(tempTopic);
+                                                    }
                                                 }
                                             }
                                             case 3 -> {
@@ -427,13 +441,22 @@ public class Main {
                                                         listExists = true;
                                                     }
                                                 }
+
+                                                //iniciando uma lista sem descrição
                                                 if (!listExists) {
-                                                    print("\nInsert a Description about " + newList + ":");
-                                                    String newDescription = sc.next();
+                                                    print("\nYou want a description?(1=Yes/0=No)");
+                                                    int selectDescription = sc.nextInt();
 
-                                                    List tempList = new List(newList, newDescription);
-                                                    user.getLists().add(tempList);
+                                                    if(selectDescription==1){
+                                                        print("\nInsert a Description about " + newList + ":");
+                                                        String newDescription = sc.next();
 
+                                                        List tempList = new List(newList, newDescription);
+                                                        user.getLists().add(tempList);
+                                                    }else {
+                                                        List tempList = new List(newList);
+                                                        user.getLists().add(tempList);
+                                                    }
                                                     print("\n>>>Created List<<<\n");
                                                 }
                                             }
@@ -592,75 +615,14 @@ public class Main {
                                                 }
                                             }
 
-                                            case 9 -> {
-                                                loginLists = false;
-                                            }
+                                            case 9 -> loginLists = false;
 
-                                            default -> {
-                                                print("\n>>>Invalid Option<<<\n");
-                                            }
-                                        }
-                                    }
-                                }
-                                case 5 -> {
-                                    boolean loginSetting = true;
-                                    while (loginSetting) {
-
-                                        print("\n_____Settings_____\n");
-                                        print("(1) Show Setting");
-                                        print("(2) Change Setting");
-                                        print("(9) Back to Main menu");
-                                        int optionSettings = sc.nextInt();
-
-                                        switch (optionSettings) {
-                                            case 1 -> {
-                                                print("\n_____Yours Settings_____\n");
-                                                if (user.getSettings().isDarkTheme()) {
-                                                    print("Dark Theme: On");
-                                                } else {
-                                                    print("Dark Theme: Off");
-                                                }
-                                                if (user.getSettings().isNotification()) {
-                                                    print("Notifications: On");
-                                                } else {
-                                                    print("Notifications: off");
-                                                }
-                                            }
-                                            case 2 -> {
-                                                print("Change Dark Theme to (1=on/2=off):");
-                                                int changeDarkTheme = sc.nextInt();
-                                                boolean darkTheme = false;
-                                                if (changeDarkTheme != 1 && changeDarkTheme != 2) {
-                                                    print("\n>>>Invalid Value!<<<\n");
-                                                    break;
-                                                }
-                                                if (changeDarkTheme == 1) {
-                                                    darkTheme = true;
-                                                }
-                                                if (changeDarkTheme == 2) {
-                                                    darkTheme = false;
-                                                }
-                                                print("Change Notifications to (1=on/2=off):");
-                                                int changeNotifications = sc.nextInt();
-                                                boolean notifications = false;
-                                                if (changeNotifications != 1 && changeNotifications != 2) {
-                                                    print("\n>>>Invalid Value!<<<\n");
-                                                    break;
-                                                }
-                                                if (changeNotifications == 1) {
-                                                    notifications = true;
-                                                }
-                                                if (changeNotifications == 2) {
-                                                    notifications = false;
-                                                }
-                                                //Utilizando novo construtor
-                                                Settings newSettings = new Settings(darkTheme,notifications);
-                                            }
-                                            case 9 -> loginSetting = false;
                                             default -> print("\n>>>Invalid Option<<<\n");
                                         }
                                     }
                                 }
+                                case 5 -> editSettings(user);
+
                                 case 9 -> login = false;
                                 default -> print("\n>>>Invalid option<<<\n");
                             }
@@ -675,14 +637,8 @@ public class Main {
                     String email, password, name, at;
                     print("Enter your email: ");
                     email = sc.next();
-                    boolean emailVerif = true;
-                    for (Account account : userTwister) {
-                        if (account.getEmail().equals(email)) {
-                            emailVerif = false;
-                            break;
-                        }
-                    }
-                    if (!emailVerif) {
+
+                    if (verifEmail(email)) {
                         print("\n>>>This Email already Exists<<<\n");
                         break;
                     }
@@ -706,18 +662,316 @@ public class Main {
                         print(">>>This at (@) already exists<<<\n\n");
                         break;
                     }
-                    Settings auxSettings = new Settings(false, true);
 
-                    Account auxAccount = new Account(name, password, email, at, auxSettings);
-                    userTwister.add(auxAccount);
+                    print("Do you want default settings?(1=Yes/2=No)");
+                    int selectionSettings = sc.nextInt();
+
+                    if(selectionSettings==1){
+                        Account auxAccount = new Account(name, password, email, at);
+                        userTwister.add(auxAccount);
+                        allUsers.add(auxAccount);
+                    }else{
+                        print("\nNotification -> (1=On/2=Off)");
+                        int notificationInt = sc.nextInt();
+                        boolean notification = notificationInt == 1;
+
+                        print("\nDarkTheme -> (1=On/2=Off)");
+                        int darkThemeInt = sc.nextInt();
+                        boolean darkTheme = darkThemeInt == 1;
+
+                        Settings settings = new Settings(darkTheme,notification);
+                        Account auxAccount = new Account(name, password, email, at, settings);
+                        userTwister.add(auxAccount);
+                        allUsers.add(auxAccount);
+                    }
+
+
+
                     print("\n\n >>>Account created<<< \n\n");
                 }
+
+                case 3 ->{
+                    if(admins.size()==0){
+                        print("\n\n>>>No admin registered<<<\n\n");
+                        break;
+                    }
+                    String auxEmail, auxPassword;
+
+                    print("\nInsert you email: ");
+                    auxEmail = sc.next();
+                    print("\nInsert your Password: ");
+                    auxPassword = sc.next();
+                    int adminIndex = -1;
+                    int count = 0;
+
+                    for(Admin aux : admins){
+                        if (aux.getEmail().equals(auxEmail)){
+                            adminIndex = count;
+                        }
+                        count++;
+                    }
+
+                    if(admins.get(adminIndex).getEmail().equals(auxEmail) && admins.get(adminIndex).getPassword().equals(auxPassword)){
+                        print("\n\n>>>Admin login Sucefully!<<<\n\n");
+
+                        //Criando objeto de admin logado
+                        Admin admin = admins.get(adminIndex);
+
+                        boolean loginAdmin = true;
+                        while(loginAdmin){
+
+                            print("\n_____Welcome_to_Twister_ADMIN_" + admin.getName() + "!______\n");
+                            print("Select an option below:");
+                            print("(1) Twist for everyone");
+                            print("(2) All your admin Twists");
+                            print("(3) List all Twists");
+                            print("(4) Delete one global Twist");
+                            print("(5) List all Twist users");
+                            print("(6) Admin Profile");
+                            print("(7) Settings");
+                            print("(9) Logout");
+
+                            int adminSelection = sc.nextInt();
+                            switch (adminSelection){
+                                case 1 ->{
+
+                                    print("\n_____New_ADMIN_Post_____\n");
+                                    print("Write your Twist: ");
+                                    String tempTwistContent = sc.next();
+                                    Twist tempTwist = new Twist(admin.getAt(), tempTwistContent, true);
+                                    admin.twisters().add(tempTwist);
+                                    globalTwists.add(tempTwist);
+                                    print("\n>>> ADMIN Twist Done! <<<\n");
+
+                                }
+
+                                case 2->{
+
+                                    print("\n_____Your_ADMIN_Twists_____\n");
+                                    int countTwists = 0;
+                                    for(Twist twist : admin.twisters()){
+                                        print("\nTwist ["+countTwists+"]");
+                                        print("@"+twist.getTwistOwner());
+                                        print(twist.getContent());
+                                        countTwists++;
+                                    }
+
+                                }
+
+                                case 3 -> allUsersTwists();
+
+                                case 4 ->{
+
+                                    //percorrendo a lista de usuarias para achar o usuario e a lista de twists para
+                                    //achar o twist certo para deletar
+                                    allUsersTwists();
+                                    print("\nSelect one index to delete: ");
+                                    int deleteTwistIndex = sc.nextInt();
+                                    int indexUser = 0;
+                                    int indexTwistInUser = 0;
+
+                                    int userCount = 0;
+                                    for(User user : allUsers){
+                                        if(user.getAt().equals(globalTwists.get(deleteTwistIndex).getTwistOwner())){
+                                            print("User: "+user.getAt()+" user twist: "+globalTwists.get(deleteTwistIndex).getTwistOwner());
+                                            indexUser = userCount;
+
+                                            int twistCount = 0;
+                                            for(Twist userTwist : user.getTwisters()){
+                                                if(userTwist.getContent().equals(globalTwists.get(deleteTwistIndex).getContent())){
+                                                    print("Cont: "+userTwist.getContent()+" cont2: "+globalTwists.get(deleteTwistIndex).getContent());
+                                                    indexTwistInUser = twistCount;
+                                                    break;
+                                                }
+                                                twistCount++;
+                                            }
+                                            break;
+                                        }
+                                        count++;
+                                    }
+
+                                    print("user: "+indexUser+" Twist: "+indexTwistInUser);
+                                    allUsers.get(indexUser).getTwisters().remove(indexTwistInUser);
+                                    globalTwists.remove(deleteTwistIndex);
+
+                                }
+
+                                case 5 -> printAllUsers();
+
+                                case 6 -> {
+                                    boolean loginAdminProfile = true;
+                                    while (loginAdminProfile) {
+
+                                        print("\n_____ADMIN_Profile_____\n");
+                                        print("(1) Show Profile");
+                                        print("(2) Edit Profile");
+                                        print("(9) Back to Main menu");
+                                        int profileOption = sc.nextInt();
+
+                                        switch (profileOption) {
+                                            case 1 -> showAdminProfile(admin);
+
+                                            case 2 -> {
+                                                boolean editAdminProfileLogin = true;
+                                                while (editAdminProfileLogin) {
+
+                                                    print("\nWhat information do you want to change: ");
+                                                    print("(1) Name");
+                                                    print("(2) At(@)");
+                                                    print("(3) Email");
+                                                    print("(4) Password");
+                                                    print("(9) Return");
+                                                    print(">>>Some infomations cant be changed (id, country, payment) <<<\n");
+                                                    int editAdminOption = sc.nextInt();
+
+                                                    switch (editAdminOption) {
+                                                        case 1 -> {
+                                                            print("\nChange the name '" + admin.getName() + "' to: ");
+                                                            String newName = sc.next();
+                                                            admin.setName(newName);
+                                                            print("\n>>>Name changed!<<<\n");
+                                                        }
+                                                        case 2 -> {
+                                                            print("\nChange the at '@" + admin.getAt() + "' to: ");
+                                                            String newAt = sc.next();
+                                                            for (User auxUser : allUsers) {
+                                                                if (auxUser.getAt().equals(newAt)) {
+                                                                    print("\n>>>This At already exists<<<\n");
+                                                                    break;
+                                                                }
+                                                            }
+                                                            print("\n>>>At changed!<<<\n");
+
+                                                            //Mudei o at do usuario depois pq precisava achar ele nso 2 for anteriores
+                                                            admin.setAt(newAt);
+
+                                                            //For alterando todos twist com @ do usuario
+                                                            for (Twist twist : admin.twisters()){
+                                                                twist.setTwistOwner(admin.getAt());
+                                                            }
+
+
+                                                        }
+                                                        case 3 -> {
+                                                            print("\nChange the email '" + admin.getEmail() + "' to: ");
+                                                            String newEmail = sc.next();
+                                                            for (User auxUser : allUsers) {
+                                                                if (auxUser.getEmail().equals(newEmail)) {
+                                                                    print("\n>>>This Email already exists<<<\n");
+                                                                    break;
+                                                                }
+                                                            }
+                                                            print("\n>>>Email changed!<<<\n");
+                                                            admin.setEmail(newEmail);
+                                                        }
+                                                        case 4 -> {
+                                                            print("\nChange the Password '" + admin.getPassword() + "' to: ");
+                                                            String newPassword = sc.next();
+                                                            admin.setPassword(newPassword);
+                                                            print("\n>>>Password changed!<<<\n");
+                                                        }
+                                                        case 9 -> editAdminProfileLogin = false;
+                                                        default -> print("\n>>>Invalid Option<<<\n");
+                                                    }
+                                                }
+                                            }
+                                            case 9 -> loginAdminProfile = false;
+
+                                            default -> print("\n>>>Invalid option<<<\n");
+                                        }
+                                    }
+                                }
+
+                                case 7 -> editSettings(admin);
+
+                                case 9 -> loginAdmin = false;
+                                default -> print("\n\n>>>Invalid Option!<<<\n\n");
+                            }
+                        }
+                    }
+                }
+                //Adicionando admim
+                case 4 ->{
+                    print("\nIf you are a volunteer admin write (1)");
+                    print("If you want to work as an admin write (2)\n");
+                    int adminSelection = sc.nextInt();
+
+                    if(adminSelection != 1 && adminSelection != 2) {
+                        print("\n\n>>>Invalid Option!<<<\n\n");
+                        break;
+                    }
+
+                    if(adminSelection == 1){
+                        String name, email, at, password;
+                        int id;
+
+                        print("Enter your email");
+                        email = sc.next();
+
+                        //verificando email
+                        if(verifEmail(email)){
+                            print("\n>>>This Email already Exists<<<\n");
+                            break;
+                        }
+                        print("Enter your password: ");
+                        password = sc.next();
+                        print("Enter your name: ");
+                        name = sc.next();
+                        print("Insert your at sign (@): ");
+                        at = sc.next();
+
+                        //Usuario recebendo id aleatorio
+                        Random r = new Random();
+                        id = r.nextInt(100000);
+
+                        Admin auxAdmin = new Admin(name, password, email, at, id);
+                        admins.add(auxAdmin);
+                        allUsers.add(auxAdmin);
+
+                        print("\n\n >>>Admin Account created<<< \n\n");
+                    }
+
+                    if(adminSelection == 2){
+                        String name, email, at, password, country;
+                        int id;
+                        float payment;
+
+                        print("Enter your email");
+                        email = sc.next();
+
+                        //verificando email
+                        if(verifEmail(email)){
+                            print("\n>>>This Email already Exists<<<\n");
+                            break;
+                        }
+                        print("Enter your password: ");
+                        password = sc.next();
+                        print("Enter your name: ");
+                        name = sc.next();
+                        print("Insert your at sign (@): ");
+                        at = sc.next();
+                        print("Insert your country: ");
+                        country = sc.next();
+                        print("How much do you want to earn? ");
+                        payment = sc.nextFloat();
+
+                        //Usuario recebendo id aleatorio
+                        Random r = new Random();
+                        id = r.nextInt(100000);
+
+                        Admin auxAdmin = new Admin(name, password, email, at, id, country, payment);
+                        admins.add(auxAdmin);
+
+                        print("\n\n >>>Admin Account created<<< \n\n");
+                    }
+                }
                 case 9 -> runningCode = false;
-                default -> print("\n\n>>>Opção invalida!<<<\n\n");
+                default -> print("\n\n>>>Invalid Option!<<<\n\n");
             }
         }
 
     }
+
     public static void print(String content){
         System.out.println(content);
     }
@@ -736,12 +990,17 @@ public class Main {
 
     private static void generateTimeLine(Account user) {
 
+        //Todos os usuarios podem visualizar mensagens de admin mas nao podem adicionalos
         for (Twist globalTwist : globalTwists) {
             for (Account friend : user.getFriend()) {
                 if (globalTwist.getTwistOwner().equals(friend.getAt())) {
                     print("\n@" + globalTwist.getTwistOwner());
                     System.out.println(globalTwist.getContent());
                 }
+            }
+            if(globalTwist.isAdminTwist()){
+                print("\n@" + globalTwist.getTwistOwner()+"-ADMIN");
+                System.out.println(globalTwist.getContent());
             }
         }
     }
@@ -771,51 +1030,185 @@ public class Main {
         print("\n_____Your_Twists_____\n");
         int countTwists=0;
         for(Twist twist : user.twisters()){
-            print("\nTwist ["+countTwists+"]");
-            print("@"+twist.getTwistOwner());
-            print(twist.getContent());
-            print("Chars: ["+twist.getContent().length()+"]\n");
-            countTwists++;
+            if(twist.isAdminTwist()){
+                print("\nTwist ["+countTwists+"]");
+                print("@"+twist.getTwistOwner()+user.typeOf());
+                print(twist.getContent());
+                print("Chars: ["+twist.getContent().length()+"]\n");
+                countTwists++;
+            }else{
+                print("\nTwist ["+countTwists+"]");
+                print("@"+twist.getTwistOwner());
+                print(twist.getContent());
+                print("Chars: ["+twist.getContent().length()+"]\n");
+                countTwists++;
+            }
         }
     }
 
-    private static void listTopics(){
+    //função que é utilizada tanto para Acccount quanto para Admin
+    static void editSettings(User user) {
+        Scanner sc = new Scanner(System.in);
+        sc.useDelimiter("\r?\n");
+        boolean loginSetting = true;
+        while (loginSetting) {
+
+            print("\n_____Settings_____\n");
+            print("(1) Show Setting");
+            print("(2) Change Setting");
+            print("(9) Back to Main menu");
+            int optionSettings = sc.nextInt();
+
+            switch (optionSettings) {
+                case 1 -> {
+                    print("\n_____Yours Settings_____\n");
+                    if (user.getSettings().isDarkTheme()) {
+                        print("Dark Theme: On");
+                    } else {
+                        print("Dark Theme: Off");
+                    }
+                    if (user.getSettings().isNotification()) {
+                        print("Notifications: On");
+                    } else {
+                        print("Notifications: off");
+                    }
+                }
+                case 2 -> {
+                    print("Change Dark Theme to (1=on/2=off):");
+                    int changeDarkTheme = sc.nextInt();
+                    boolean darkTheme = false;
+                    if (changeDarkTheme != 1 && changeDarkTheme != 2) {
+                        print("\n>>>Invalid Value!<<<\n");
+                        break;
+                    }
+                    if (changeDarkTheme == 1) {
+                        darkTheme = true;
+                    }
+                    print("Change Notifications to (1=on/2=off):");
+                    int changeNotifications = sc.nextInt();
+                    boolean notifications = false;
+                    if (changeNotifications != 1 && changeNotifications != 2) {
+                        print("\n>>>Invalid Value!<<<\n");
+                        break;
+                    }
+                    if (changeNotifications == 1) {
+                        notifications = true;
+                    }
+                    //Utilizando novo construtor
+                    Settings newSettings = new Settings(darkTheme, notifications);
+                    user.setSettings(newSettings);
+                }
+                case 9 -> loginSetting = false;
+                default -> print("\n>>>Invalid Option<<<\n");
+            }
+        }
+    }
+
+
+        private static void listTopics(){
+            int indexCount = 0;
+            for(Topic topics : globalTopic){
+                print("\n["+indexCount+"] Topic: " + topics.getName());
+                print("Category: " + topics.getCategory());
+                print("Number of Twists: " + topics.getSizeTwists());
+                indexCount++;
+            }
+        }
+
+        private static void showLists(Account user){
+            print("\n_____Your_Lists_____\n");
+            int indexCount = 0;
+            for (List list : user.getLists()){
+                print("\n["+indexCount+"] List: " + list.getName());
+                print("Description: " + list.getCategory());
+                print("Number of Members: " + list.getMembers().size());
+            }
+        }
+
+    //se existir email igual retorna true
+    private static boolean verifEmail(String email){
+        for(User user : allUsers){
+            if(user.getEmail().equals(email)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //função para listar todos os twists de todos os usuarios
+    private static void allUsersTwists(){
         int indexCount = 0;
-        for(Topic topics : globalTopic){
-            print("\n["+indexCount+"] Topic: " + topics.getName());
-            print("Category: " + topics.getCategory());
-            print("Number of Twists: " + topics.getSizeTwists());
+        for(Twist twist : globalTwists){
+            if(twist.isAdminTwist()){
+
+                print("\nTwist ["+indexCount+"]");
+                print("@"+twist.getTwistOwner());
+                print(twist.getContent());
+
+            }else {
+
+                print("\nTwist ["+indexCount+"]");
+                print("@"+twist.getTwistOwner()+"-ACCOUNT");
+                print(twist.getContent());
+                print("Chars: ["+twist.getContent().length()+"]\n");
+            }
             indexCount++;
         }
+
     }
 
-    private static void showLists(Account user){
-        print("\n_____Your_Lists_____\n");
-        int indexCount = 0;
-        for (List list : user.getLists()){
-            print("\n["+indexCount+"] List: " + list.getName());
-            print("Description: " + list.getCategory());
-            print("Number of Members: " + list.getMembers().size());
+    //Faz o print de todos os usuarios
+    private static void printAllUsers(){
+        int count = 0;
+        for(User user : allUsers){
+            print("\n["+count+"]");
+            print("@"+user.getAt()+user.typeOf());
+            print("Name: "+user.getName());
+            print("Email: "+user.getEmail());
+            print("Twists: "+user.getTwisters().size());
+
+            count++;
         }
     }
 
+    //Print do perfil do Admin
+    private static void showAdminProfile(Admin admin) {
+        print("\n\nADMIN PROFILE\n\n");
+        print("Name: "+admin.getName());
+        print("@"+admin.getAt()+admin.typeOf());
+        print("Email: "+admin.getEmail());
+        print("Password: "+admin.getPassword());
+        print("ID: "+admin.getId());
+        if(admin.getCountry()!=null){
+            print("Country: "+admin.getCountry());
+            print("Payment: "+admin.getPayment());
+        }
+    }
+
+
     private static void addData(){
-        Settings defaultSettings = new Settings(false,true);
 
-        Account accountBruno = new Account("Bruno","senha","bruno", "BPerdona", defaultSettings);
+
+        Account accountBruno = new Account("Bruno","senha","bruno", "BPerdona");
         userTwister.add(accountBruno);
+        allUsers.add(accountBruno);
 
-        Account accountEminem = new Account("Marshall","123","marshal.com","Eminem", defaultSettings);
+        Account accountEminem = new Account("Marshall","123","marshal.com","Eminem");
         userTwister.add(accountEminem);
+        allUsers.add(accountEminem);
 
-        Account accountRock = new Account("The Rock","4444","Dwayne Johnson","TheRock", defaultSettings);
+        Account accountRock = new Account("The Rock","4444","Dwayne Johnson","TheRock");
         userTwister.add(accountRock);
+        allUsers.add(accountRock);
 
-        Account accountLucca = new Account("Adam Sandler","6969","adam@sandler.com","ASandler", defaultSettings);
+        Account accountLucca = new Account("Lucca","6969","lucca.com","Lucca");
         userTwister.add(accountLucca);
-        Twist twistLucca = new Twist("Lucca","RHCP Melhor banda!");
-        userTwister.get(3).twisters().add(twistLucca);
-        globalTwists.add(twistLucca);
+        allUsers.add(accountLucca);
+
+        //adicionei
+        Admin novoAdmin = new Admin("The Best", "admin", "admin", "admin", 123);
+        admins.add(novoAdmin);
+        allUsers.add(novoAdmin);
 
         Topic topicFilme = new Topic("Celebrities", "Films");
 

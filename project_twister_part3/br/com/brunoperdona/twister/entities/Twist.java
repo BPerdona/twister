@@ -35,7 +35,7 @@ public class Twist {
         return content;
     }
 
-    public boolean getAdminTwist(){
-        return this.adminTwist;
+    public boolean isAdminTwist() {
+        return adminTwist;
     }
 }

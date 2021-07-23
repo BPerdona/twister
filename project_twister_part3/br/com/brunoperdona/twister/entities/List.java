@@ -3,19 +3,19 @@ import java.util.ArrayList;
 
 public class List {
     private String name;
-    private String category;
+    private String description;
     private ArrayList<Account> members;
 
     public List(String name, String description) {
         this.name = name;
-        this.category = description;
+        this.description = description;
         this.members = new ArrayList<Account>();
     }
 
     //Construtor para adicionar uma lista sem categoria
     public List(String name){
         this.name = name;
-        this.category = " ";
+        this.description = " ";
         this.members = new ArrayList<Account>();
     }
 
@@ -28,11 +28,11 @@ public class List {
     }
 
     public String getCategory() {
-        return category;
+        return description;
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.description = category;
     }
 
     public ArrayList<Account> getMembers() {

@@ -1,4 +1,5 @@
 package br.com.brunoperdona.twister.entities;
+
 import java.util.ArrayList;
 
 public class Topic {
