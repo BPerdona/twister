@@ -1,7 +1,7 @@
 package br.com.brunoperdona.twister;
 
 import br.com.brunoperdona.twister.entities.*;
-import br.com.brunoperdona.twister.settings.Settings;
+import br.com.brunoperdona.twister.settings.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -773,13 +773,11 @@ public class Main {
                                     int userCount = 0;
                                     for(User user : allUsers){
                                         if(user.getAt().equals(globalTwists.get(deleteTwistIndex).getTwistOwner())){
-                                            print("User: "+user.getAt()+" user twist: "+globalTwists.get(deleteTwistIndex).getTwistOwner());
                                             indexUser = userCount;
 
                                             int twistCount = 0;
                                             for(Twist userTwist : user.getTwisters()){
                                                 if(userTwist.getContent().equals(globalTwists.get(deleteTwistIndex).getContent())){
-                                                    print("Cont: "+userTwist.getContent()+" cont2: "+globalTwists.get(deleteTwistIndex).getContent());
                                                     indexTwistInUser = twistCount;
                                                     break;
                                                 }
@@ -790,9 +788,9 @@ public class Main {
                                         count++;
                                     }
 
-                                    print("user: "+indexUser+" Twist: "+indexTwistInUser);
                                     allUsers.get(indexUser).getTwisters().remove(indexTwistInUser);
                                     globalTwists.remove(deleteTwistIndex);
+                                    print("\n>>> The Twist has been deleted! <<<\n");
 
                                 }
 
@@ -1213,7 +1211,7 @@ public class Main {
         Topic topicFilme = new Topic("Celebrities", "Films");
 
         Twist twistFilme1 = new Twist("Flea","Otimo filme");
-        Twist twistFilme2 = new Twist("Pedro123","Não gostei");
+        Twist twistFilme2 = new Twist("Pedro123","Nao gostei");
         topicFilme.addTwist(twistFilme1);
         topicFilme.addTwist(twistFilme2);
 

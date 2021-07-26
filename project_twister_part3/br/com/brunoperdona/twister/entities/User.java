@@ -85,11 +85,3 @@ public abstract class User {
 
 }
 
-/*
-* TODO->>
-*  organize seu projeto em pelo menos 2 pacotes (10% da nota);
-   seu projeto deve possuir pelo menos uma classe abstrata e duas classes que estendem (herança) esta classe abstrata, além disso, esta herança deve fazer sentido (30% da nota);
-   sua classe abstrata deve possuir pelo menos um método abstrato e as classes filhas devem implementá-lo (sobrescrita) (20% da nota)
-   suas classes devem possuir pelo menos dois métodos construtores (sobrecarga) (10% da nota);
-   deve ser possível, em tempo de execução, listar os objetos que estendem a classe abstrata utilizando referências para a classe mãe abstrata (polimorfismo) (30% da nota).
-* */
